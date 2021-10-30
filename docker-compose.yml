@@ -1,0 +1,37 @@
+version: '3'
+services:
+    nginx:
+        image: nginx:stable-alpine
+        volumes:
+         - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    
+    first-demo-service:
+        deploy:
+            replicas: 8
+            restart_policy:
+             condition: any
+            update_config:
+             parallelism: 2
+             delay: 15s
+        # (there is not open port this service to outside, 
+        # but open nginx to outside, outside will call nginx, nginx to traffic all service)
+        build: .
+        # ports:
+        #  - "3000:3001"
+        image: doanducdat271020/first-demo-node-app-learn-docker
+        env_file:
+         - ./.env
+        depends_on:
+         - mongo
+    
+    mongo:
+        image: mongo
+        volumes:
+         - mongo-db:/data/db
+
+    redis:
+        image: redis
+
+# declare mongo-db to use volume in mongo(mongo-service)
+volumes:
+    mongo-db:

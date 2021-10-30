@@ -1,0 +1,23 @@
+version: '3'
+services:
+  nginx:
+    ports:
+     - "3000:80"
+
+  first-demo-service:
+    build:
+      context: .
+      args: 
+        NODE_ENV: development
+    volumes:
+      - ./:/app
+    environment:
+      - NODE_ENV=development
+      - MONGO_USER=dat
+      - MONGO_PASSWORD=doanducdat
+      - SESSION_SECRET=secretofdat
+    command: npm run dev
+  mongo:
+    environment:
+     - MONGO_INITDB_ROOT_USERNAME=dat
+     - MONGO_INITDB_ROOT_PASSWORD=doanducdat
